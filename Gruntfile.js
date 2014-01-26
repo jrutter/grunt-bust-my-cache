@@ -2,7 +2,7 @@
  * grunt-bust-my-cache
  * https://github.com/jrutter/grunt-bust-my-cache
  *
- * Copyright (c) 2014 jrutter
+ * Copyright (c) 2014 Jake Rutter
  * Licensed under the MIT license.
  */
 
@@ -10,64 +10,81 @@
 
 module.exports = function(grunt) {
 
-  // Project configuration.
-  grunt.initConfig({
-    jshint: {
-      all: [
-        'Gruntfile.js',
-        'tasks/*.js',
-        '<%= nodeunit.tests %>',
-      ],
-      options: {
-        jshintrc: '.jshintrc',
-      },
-    },
+    grunt.initConfig({
 
-    // Before generating any new files, remove any previously-created files.
-    clean: {
-      tests: ['tmp'],
-    },
-
-    // Configuration to be run (and then tested).
-    bust_my_cache: {
-      default_options: {
-        options: {
+        clean: {
+            tmp: 'tmp'
         },
-        files: {
-          'tmp/default_options': ['test/fixtures/testing', 'test/fixtures/123'],
+
+        jshint: {
+            all: [
+                'Gruntfile.js',
+                'tasks/*.js',
+                '<%= nodeunit.tests %>'
+            ],
+            options: {
+                jshintrc: '.jshintrc'
+            }
         },
-      },
-      custom_options: {
-        options: {
-          separator: ': ',
-          punctuation: ' !!!',
+
+        copy: {
+            main: {
+                files: [{
+                    expand: true,
+                    cwd: 'test/fixtures',
+                    src: ['**'],
+                    dest: 'tmp/'
+                }]
+            }
         },
-        files: {
-          'tmp/custom_options': ['test/fixtures/testing', 'test/fixtures/123'],
+
+        bustMyCache: {
+            base: { 
+                options: {
+                    baseDir: 'tmp/',
+                },
+                files: {
+                    'tmp/default.html':'tmp/default.html'
+                }
+              },
+            filterTest: { 
+                options: {
+                    filter: 'assets/script1.js'
+                },
+                files: {
+                    'tmp/default.html':'tmp/default.html'
+                }
+              },
         },
-      },
-    },
 
-    // Unit tests.
-    nodeunit: {
-      tests: ['test/*_test.js'],
-    },
+        nodeunit: {
+            tests: ['test/*_test.js']
+        },
 
-  });
+        watch: {
+            task: {
+                files: 'tasks/bust_my_cache.js',
+                tasks: 'nodeunit'
+            }
+        }
 
-  // Actually load this plugin's task(s).
-  grunt.loadTasks('tasks');
+    });
 
-  // These plugins provide necessary tasks.
-  grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-contrib-nodeunit');
 
-  // Whenever the "test" task is run, first clean the "tmp" dir, then run this
-  // plugin's task(s), then test the result.
-  grunt.registerTask('test', ['clean', 'bust_my_cache', 'nodeunit']);
+    // Load this plugins tasks
+    grunt.loadTasks('tasks');
 
-  // By default, lint and run all tests.
-  grunt.registerTask('default', ['jshint', 'test']);
+    grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-contrib-nodeunit');
+    grunt.loadNpmTasks('grunt-contrib-watch');
 
+    grunt.registerTask('bust-base', ['clean', 'copy', 'bustMyCache:base']);
+    grunt.registerTask('bust-filter', ['clean', 'copy', 'bustMyCache:filterTest']);
+
+    grunt.registerTask('test', ['clean', 'copy', 'bustMyCache:base', 'nodeunit']);
+
+    // Travis CI task.
+    grunt.registerTask('travis', ['clean', 'copy', 'bustMyCache', 'nodeunit']);
 };

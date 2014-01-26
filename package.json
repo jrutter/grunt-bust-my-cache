@@ -1,7 +1,7 @@
 {
   "name": "grunt-bust-my-cache",
-  "description": "The best Grunt plugin ever.",
-  "version": "0.1.0",
+  "description": "Bust static assets from the cache using date.now(). Can also filter a specific file to be cache busted.",
+  "version": "0.2.0",
   "homepage": "https://github.com/jrutter/grunt-bust-my-cache",
   "author": {
     "name": "jrutter",
@@ -24,16 +24,22 @@
     "node": ">= 0.8.0"
   },
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt test",
+    "test": "grunt travis --verbose"
   },
   "devDependencies": {
     "grunt-contrib-jshint": "~0.6.0",
     "grunt-contrib-clean": "~0.4.0",
+    "grunt-contrib-copy": "~0.4.1",
     "grunt-contrib-nodeunit": "~0.2.0",
-    "grunt": "~0.4.2"
+    "grunt": "~0.4.2",
+    "grunt-contrib-watch": "~0.5.3"
   },
   "peerDependencies": {
     "grunt": "~0.4.2"
+  },
+  "dependencies": {
+    "cheerio": "~0.12.4"
   },
   "keywords": [
     "gruntplugin"

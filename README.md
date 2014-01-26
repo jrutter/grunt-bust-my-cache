@@ -1,8 +1,11 @@
 # grunt-bust-my-cache
 
-> The best Grunt plugin ever.
+> Bust static assets from the cache using date.now() along with the ability to target specific files. 
+
+[![Build Status](https://travis-ci.org/jrutter/grunt-bust-my-cache.png?branch=master)](https://travis-ci.org/jrutter/grunt-bust-my-cache)
 
 ## Getting Started
+
 This plugin requires Grunt `~0.4.2`
 
 If you haven't used [Grunt](http://gruntjs.com/) before, be sure to check out the [Getting Started](http://gruntjs.com/getting-started) guide, as it explains how to create a [Gruntfile](http://gruntjs.com/sample-gruntfile) as well as install and use Grunt plugins. Once you're familiar with that process, you may install this plugin with this command:
@@ -17,73 +20,104 @@ Once the plugin has been installed, it may be enabled inside your Gruntfile with
 grunt.loadNpmTasks('grunt-bust-my-cache');
 ```
 
-## The "bust_my_cache" task
+If the plugin has been installed correctly, running `grunt --help` at the command line should list the newly-installed plugin's task or tasks. In addition, the plugin should be listed in package.json as a `devDependency`, which ensures that it will be installed whenever the `npm install` command is run.
+
+[grunt]: http://gruntjs.com/
+[Getting Started]: https://github.com/gruntjs/grunt/blob/devel/docs/getting_started.md
+[package.json]: https://npmjs.org/doc/json.html
+
+## The "bustMyCache" task
+
+Use the **bustMyCache** task for cache busting static files in your application. This allows them to be cached forever by the browser, just point the task towards any file that contains references to static assets.
+
+_Currently supported static assets: **CSS** & **JavaScript**.
+
+_Note:_ Remote URLs for CSS and JavaScript are ignored by bustMyCache.  This assumes that remote URLs for these assets will
+be CDN hosted content, typically for well known libraries like jQuery or Bootstrap.  These URLs typically include a version
+identifier in the URL to deal with browser caching, and it is in the best interest of your app to use the standard URL as-is
+to ensure browser cache hits for popular libraries.  For example, all of below URLs will be ignored:
+
+```html
+<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+<link href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" rel="stylesheet">
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/qunit/qunit-1.12.0.js"></script>
+
+```
 
 ### Overview
-In your project's Gruntfile, add a section named `bust_my_cache` to the data object passed into `grunt.initConfig()`.
+In your project's Gruntfile, add a section named `bustMyCache` to the data object passed into `grunt.initConfig()`.
 
 ```js
-grunt.initConfig({
-  bust_my_cache: {
+bustMyCache: {
+  default: { 
     options: {
-      // Task-specific options go here.
+      encoding: 'utf8',
+      algorithm: 'md5',
+      length: 16,
+      useDate: true,
+      filter: 'global.css'
     },
-    your_target: {
-      // Target-specific file lists and/or options go here.
-    },
-  },
-});
+    files: {
+        '../../../jsp/templates/page_elements/us/law/pageHeader.jsp':'../../../jsp/templates/page_elements/us/law/pageHeader.jsp'
+    }
+  }
+}
 ```
 
 ### Options
 
-#### options.separator
+#### options.filter
 Type: `String`
-Default value: `',  '`
+Default value: `false`
 
-A string value that is used to do something with whatever.
+Allow you to pass a path to a specific file to be cache busted, useful if you don't want to blow away the cache on all of your files.
 
-#### options.punctuation
-Type: `String`
-Default value: `'.'`
-
-A string value that is used to do something else with whatever else.
 
 ### Usage Examples
 
-#### Default Options
-In this example, the default options are used to do something with whatever. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result would be `Testing, 1 2 3.`
+#### Basic Asset Cache Busting
 
 ```js
 grunt.initConfig({
-  bust_my_cache: {
-    options: {},
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
-  },
-});
+  bustMyCache: {
+    default: { 
+      files: {
+          'src/pageHeader.jsp':'dist/pageHeader.jsp'
+      }
+    }
+  }
+})
 ```
 
-#### Custom Options
-In this example, custom options are used to do something else with whatever else. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result in this case would be `Testing: 1 2 3 !!!`
+#### Basic Asset Cache Busting with different configs
 
 ```js
 grunt.initConfig({
-  bust_my_cache: {
-    options: {
-      separator: ': ',
-      punctuation: ' !!!',
+  bustMyCache: {
+    global_css: { 
+      options: {
+        filter: 'global.css'
+      },
+      files: {
+      'src/pageHeader.jsp':'dist/pageHeader.jsp'
+      }
     },
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
+    product_css: { 
+      options: {
+        filter: 'product.css'
+      },
+      files: {
+      'src/pageHeader.jsp':'dist/pageHeader.jsp'
+      }
+    }
   },
-});
+})
 ```
-
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
 _(Nothing yet)_
+
