@@ -54,14 +54,10 @@ In your project's Gruntfile, add a section named `bustMyCache` to the data objec
 bustMyCache: {
   default: { 
     options: {
-      encoding: 'utf8',
-      algorithm: 'md5',
-      length: 16,
-      useDate: true,
       filter: 'global.css'
     },
     files: {
-        '../../../jsp/templates/page_elements/us/law/pageHeader.jsp':'../../../jsp/templates/page_elements/us/law/pageHeader.jsp'
+        'src/pageHeader.jsp':'dist/pageHeader.jsp'
     }
   }
 }
@@ -120,5 +116,5 @@ grunt.initConfig({
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
-_(Nothing yet)_
+v2.0 - Rewrote plugin from ground up and setup new unit tests.
 
