@@ -1,7 +1,7 @@
 {
   "name": "grunt-bust-my-cache",
   "description": "Bust static assets from the cache using date.now(). Can also filter a specific file to be cache busted.",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "homepage": "https://github.com/jrutter/grunt-bust-my-cache",
   "author": {
     "name": "jrutter",

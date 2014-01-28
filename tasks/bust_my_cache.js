@@ -58,6 +58,7 @@ module.exports = function(grunt) {
             assets += e.data.replace(/\[.*\]>|<!\[endif\]/g, '').trim();
         });
 
+
         $('body').append(assets);
 
         var scripts = $('script').filter(checkIfValidFile).map(function() { return this.attr('src'); });
@@ -85,27 +86,17 @@ module.exports = function(grunt) {
                 var markup = grunt.file.read(filepath);
                                 
                 findStaticAssets(markup).forEach(function(reference) {
-                    var _reference = reference;
-                    var filePath   = opts.baseDir + '/';
-                    var extension  = path.extname(filename);
-
+                    var filePath   = opts.baseDir;
                     var newFilename;
-
                     var filter = opts.filter;
-                    var filterIndex = _reference.indexOf(filter);
-
-                    if(filterIndex > -1) {
-                        var filename = opts.filter;
-                    }
-                    else {
-                        var filename   = path.normalize((filePath + reference).split('?')[0]);
-                    }
+                    var filterIndex = reference.indexOf(filter);
 
                     // Cache bust paths equal to the filter
                     if(opts.filter) {
                         
+                        // If Filter Being Used
                         if(filterIndex > -1) {
-                            newFilename = filter + '?d=' + Date.now();
+                            newFilename = filePath + filter + '?d=' + Date.now();
                             grunt.log.error(newFilename);
                             markup = markup.replace(new RegExp(regexEscape(reference), 'g'), newFilename);
                         }

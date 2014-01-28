@@ -41,7 +41,7 @@ module.exports = function(grunt) {
         bustMyCache: {
             base: { 
                 options: {
-                    baseDir: 'tmp/',
+                    baseDir: 'assets/',
                 },
                 files: {
                     'tmp/default.html':'tmp/default.html'
@@ -49,7 +49,8 @@ module.exports = function(grunt) {
               },
             filterTest: { 
                 options: {
-                    filter: 'assets/script1.js'
+                    baseDir: 'assets/',
+                    filter: 'script1.js'
                 },
                 files: {
                     'tmp/default.html':'tmp/default.html'
@@ -79,6 +80,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-nodeunit');
     grunt.loadNpmTasks('grunt-contrib-watch');
+
+    grunt.registerTask('default', ['clean', 'copy', 'bustMyCache:filterTest']);
 
     grunt.registerTask('bust-base', ['clean', 'copy', 'bustMyCache:base']);
     grunt.registerTask('bust-filter', ['clean', 'copy', 'bustMyCache:filterTest']);

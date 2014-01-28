@@ -71,6 +71,12 @@ Default value: `false`
 
 Allow you to pass a path to a specific file to be cache busted, useful if you don't want to blow away the cache on all of your files.
 
+#### options.baseDir
+Type: `String`
+Default value: `./`
+
+If your assets are located in a different directory, make sure you set this to the correct base path.
+
 
 ### Usage Examples
 
