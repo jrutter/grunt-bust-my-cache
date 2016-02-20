@@ -24,7 +24,6 @@
     "node": ">= 0.8.0"
   },
   "scripts": {
-    "test": "grunt test",
     "test": "grunt travis --verbose"
   },
   "devDependencies": {
@@ -36,7 +35,7 @@
     "grunt-contrib-watch": "~0.5.3"
   },
   "peerDependencies": {
-    "grunt": "~0.4.2"
+    "grunt": ">=0.4.0"
   },
   "dependencies": {
     "cheerio": "~0.12.4"
